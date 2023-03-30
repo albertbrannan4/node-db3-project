@@ -144,7 +144,8 @@ function addStep(scheme_id, step) {
 async function findScheme(id) {
   const result = await db("schemes")
     .where("scheme_id", id)
-    .select("scheme_name");
+    .select("scheme_name")
+    .first();
   return result;
 }
 

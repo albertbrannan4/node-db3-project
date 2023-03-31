@@ -27,12 +27,29 @@ async function find() {
 }
 
 async function findById(scheme_id) {
-  const row = await db("schemes as sc")
+  const rows = await db("schemes as sc")
     .leftJoin("steps as st", "sc.scheme_id", "=", "st.scheme_id")
     .select("sc.scheme_name", "st.*")
     .where("sc.scheme_id", scheme_id)
     .orderBy("st.step_number", "asc");
-  return row;
+  let result = rows.reduce(
+    (acc, row) => {
+      if (row.instructions) {
+        acc.steps.push({
+          step_id: row.step_id,
+          step_number: row.step_number,
+          instructions: row.instructions,
+        });
+      }
+      return acc;
+    },
+    {
+      scheme_id: rows[0].scheme_id,
+      scheme_name: rows[0].scheme_name,
+      steps: [],
+    }
+  );
+  return result;
   // EXERCISE B
   /*
     1B- Study the SQL query below running it in SQLite Studio against `data/schemes.db3`:

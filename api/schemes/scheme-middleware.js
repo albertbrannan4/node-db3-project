@@ -51,7 +51,22 @@ const validateScheme = (req, res, next) => {
     "message": "invalid step"
   }
 */
-const validateStep = (req, res, next) => {};
+const validateStep = (req, res, next) => {
+  const { step_number, instructions } = req.body;
+
+  if (
+    step_number === undefined ||
+    instructions === undefined ||
+    typeof step_number !== "number" ||
+    typeof instructions !== "string" ||
+    !instructions.trim().length
+  ) {
+    next({ status: 400, message: "invalid step" });
+  } else {
+    req.body.instructions = instructions.trim();
+    next();
+  }
+};
 
 module.exports = {
   checkSchemeId,

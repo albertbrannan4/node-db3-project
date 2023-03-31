@@ -148,11 +148,16 @@ async function findSteps(scheme_id) {
   return rows;
 }
 
-function add(scheme) {
+async function add(scheme_name) {
   // EXERCISE D
   /*
     1D- This function creates a new scheme and resolves to _the newly created scheme_.
   */
+  let [createdScheme] = await db("schemes").insert(scheme_name);
+  let result = await db("schemes")
+    .select("scheme_id", "scheme_name")
+    .where("scheme_id", createdScheme);
+  return result[0];
 }
 
 function addStep(scheme_id, step) {

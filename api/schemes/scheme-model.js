@@ -118,7 +118,7 @@ async function findById(scheme_id) {
   */
 }
 
-function findSteps(scheme_id) {
+async function findSteps(scheme_id) {
   // EXERCISE C
   /*
     1C- Build a query in Knex that returns the following data.
@@ -140,6 +140,12 @@ function findSteps(scheme_id) {
         }
       ]
   */
+  const rows = await db("schemes as sc")
+    .join("steps as st", "sc.scheme_id", "=", "st.scheme_id")
+    .select("step_id", "step_number", "instructions", "sc.scheme_name")
+    .where("sc.scheme_id", scheme_id)
+    .orderBy("st.step_number", "asc");
+  return rows;
 }
 
 function add(scheme) {
